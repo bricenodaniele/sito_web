@@ -1,17 +1,9 @@
 // Funzione che interroga il server
-async function richiediOraDalServer() {
-    try {
-        const risposta = await fetch('/ora');
-        const dati = await risposta.json();
-        
-        const elementoOrario = document.getElementById('orario');
-        elementoOrario.innerText = "Il server dice che sono le: " + dati.orario;
-        
-        // Un tocco di classe: cambiamo colore al testo per mostrare l'aggiornamento
-        elementoOrario.style.color = "#00ff88"; 
-    } catch (errore) {
-        console.error("Errore di connessione:", errore);
-    }
+// Funzione per l'ora (già vista)
+async function aggiornaOra() {
+    const res = await fetch('/ora');
+    const json = await res.json();
+    document.getElementById('orario').innerText = "Ora del server: " + json.orario;
 }
 
 // NUOVA FUNZIONE: Saluto
@@ -31,7 +23,31 @@ async function inviaSaluto() {
     // 3. Mostriamo la risposta del server nella pagina
     document.getElementById('risposta-saluto').innerText = json.messaggio;
 }
+  async function calcolaSomma() {
+            let a = document.getElementById("num1").value;
+            let b = document.getElementById("num2").value;
 
+            let response = await fetch(`/somma?a=${a}&b=${b}`);
+            let data = await response.json();
+        document.getElementById("risultato").innerText = "Risultato: " + data.risultato;
+  }
+
+   async function calcola() {
+            let a = document.getElementById("num1").value;
+            let b = document.getElementById("num2").value;
+            let op = document.getElementById("operazione").value;
+
+            let response = await fetch(`/calcola?a=${a}&b=${b}&operazione=${op}`);
+            let data = await response.json();
+
+            if (data.errore) {
+                document.getElementById("risultato2").innerText = "Errore: " + data.errore;
+            } else {
+                document.getElementById("risultato2").innerText = "Risultato: " + data.risultato;
+            }
+        }
 // Colleghiamo i bottoni alle funzioni
 document.getElementById('btn-ora').addEventListener('click', aggiornaOra);
 document.getElementById('btn-saluto').addEventListener('click', inviaSaluto);
+document.getElementById('btn-somma').addEventListener('click', calcolaSomma);
+document.getElementById('btn-calcolo').addEventListener('click', calcola);
